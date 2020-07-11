@@ -1,0 +1,16 @@
+*~
+*.db
+*.bak
+
+/dist
+
+/twt
+/twtd
+
+/cmd/twt/twt
+/cmd/twtd/twtd
+
+/data/cache
+/data/feeds/*
+
+/rice-box.go

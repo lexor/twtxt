@@ -1,0 +1,29 @@
+{{define "content"}}
+  <article class="grid">
+    <div>
+      <hgroup>
+        <h1>Account settings</h1>
+        <h2>Update your account settings and password here</h2>
+      </hgroup>
+      <form action="/settings" method="POST">
+        <input type="password" name="password" placeholder="Updated password" aria-label="Password" autocomplete="current-password">
+        <button type="submit" class="primary">Update</button>
+      </form>
+    </div>
+    <div>
+      <hgroup>
+        <h1>Following</h1>
+        <h2>List of feeds you are following</h2>
+      </hgroup>
+      {{ if .User.Following }}
+        <ol>
+          {{ range $Nick, $URL := .User.Following }}
+          <li><a href="{{ $URL }}">{{ $Nick }}</a>(<i>{{ $URL }}</i>)&nbsp;[<a href="/unfollow?nick={{ $Nick }}">Unfollow</a>]</li>
+          {{ end }}
+        </oL>
+      {{ else }}
+        <small><i>You are following zero feeds! Click <a href="/follow">/follow</a> to start following feeds.</i></small>
+      {{ end }}
+    </div>
+  </article>
+{{end}}

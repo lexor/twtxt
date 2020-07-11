@@ -1,0 +1,21 @@
+{{define "content"}}
+{{ if .Authenticated }}
+  <div class="grid">
+    <div>
+      <form action="/post" method="POST">
+        <div class="grid">
+          <textarea id="text" name="text" placeholder="What's on your mind?" rows=1 maxlength=140 autofocus required></textarea>
+        </div>
+        <button type="submit">Post</button>
+      </form>
+    </div>
+  </div>
+{{ end }}
+<div class="grid">
+  <div>
+    {{ range .Tweets }}
+      <p>&gt;&nbsp;<a href="{{ .Tweeter.URL }}">{{ .Tweeter.Nick }}</a>&nbsp;({{ .Created | Time }})<br />{{ .Text | FormatMentions }}</p>
+    {{ end }}
+  </div>
+</div>
+{{end}}

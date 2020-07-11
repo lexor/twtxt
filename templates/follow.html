@@ -1,0 +1,16 @@
+{{define "content"}}
+  <article class="grid">
+    <div>
+      <hgroup>
+        <h1>Follow</h1>
+        <h2>Follow a new user or feed</h2>
+      </hgroup>
+      <form action="/follow" method="POST">
+        <input type="nick" name="nick" placeholder="Nickname for the feed" aria-label="Username" autocomplete="nickname" autofocus required>
+        <input type="url" name="url" placeholder="URL of the feed" aria-label="URL" autocomplete="url" required>
+        <button type="submit" class="primary">Follow</button>
+      </form>
+    </div>
+    <div></div>
+  </article>
+{{end}}

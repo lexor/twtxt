@@ -1,0 +1,24 @@
+---
+builds:
+  - binary: twtxtd
+    flags: -tags "static_build"
+    ldflags: -w -X main.Version={{.Version}} -X main.Commit={{.Commit}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - freebsd
+      - linux
+      - windows
+    goarch:
+      - i386
+      - amd64
+      - arm
+      - amd64
+    goarm:
+      - 6
+      - 7
+    hooks:
+      pre: rice embed-go
+sign:
+  artifacts: checksum

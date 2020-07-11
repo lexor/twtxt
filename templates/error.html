@@ -1,0 +1,9 @@
+{{define "content"}}
+  <article class="grid">
+    <div>
+      <hgroup>
+        <h1>{{ if .Error }}Error{{ else }}Success {{ end }}</h1>
+        <h2>{{ .Message }}</h2>
+      </hgroup>
+  </article>
+{{end}}

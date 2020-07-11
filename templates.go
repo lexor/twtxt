@@ -1,0 +1,94 @@
+package twtxt
+
+import (
+	"bytes"
+	"fmt"
+	"html/template"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+
+	rice "github.com/GeertJohan/go.rice"
+	humanize "github.com/dustin/go-humanize"
+	log "github.com/sirupsen/logrus"
+)
+
+const (
+	baseTemplate = "base.html"
+	baseName     = "base"
+)
+
+type Templates struct {
+	sync.Mutex
+
+	templates map[string]*template.Template
+}
+
+func NewTemplates() (*Templates, error) {
+	templates := make(map[string]*template.Template)
+
+	funcMap := map[string]interface{}{
+		"Time":           humanize.Time,
+		"FormatMentions": FormatMentions,
+	}
+
+	box, err := rice.FindBox("templates")
+	if err != nil {
+		log.WithError(err).Errorf("error finding templates")
+		return nil, err
+	}
+
+	err = box.Walk("", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.WithError(err).Error("error finding templates")
+			return err
+		}
+
+		if !info.IsDir() && info.Name() != baseTemplate {
+			name := strings.TrimSuffix(info.Name(), filepath.Ext(info.Name()))
+			t := template.New(name)
+			t.Funcs(funcMap)
+			template.Must(t.Parse(box.MustString(info.Name())))
+			template.Must(t.Parse(box.MustString(baseTemplate)))
+			templates[name] = t
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &Templates{templates: templates}, nil
+}
+
+func (t *Templates) Add(name string, template *template.Template) {
+	t.Lock()
+	defer t.Unlock()
+
+	t.templates[name] = template
+}
+
+func (t *Templates) Exec(name string, ctx *Context) (io.WriterTo, error) {
+	t.Lock()
+	template, ok := t.templates[name]
+	t.Unlock()
+	if !ok {
+		log.Errorf("template %s not found", name)
+		return nil, fmt.Errorf("no such template: %s", name)
+	}
+
+	if ctx == nil {
+		ctx = &Context{}
+	}
+
+	buf := bytes.NewBuffer([]byte{})
+	err := template.ExecuteTemplate(buf, baseName, ctx)
+	if err != nil {
+		log.WithError(err).Errorf("error parsing template %s: %s", name, err)
+		return nil, err
+	}
+
+	return buf, nil
+}
