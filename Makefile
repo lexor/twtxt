@@ -1,9 +1,12 @@
-.PHONY: dev build install image release test clean
+.PHONY: deps dev build install image release test clean
 
 CGO_ENABLED=0
 COMMIT=$(shell git rev-parse --short HEAD)
 
 all: dev
+
+deps:
+	@go get github.com/GeertJohan/go.rice/rice
 
 dev: build
 	@./twtd -D
