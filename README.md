@@ -7,7 +7,7 @@
 [![Sourcegraph](https://sourcegraph.com/github.com/prologic/twtxt/-/badge.svg)](https://sourcegraph.com/github.com/prologic/twtxt?badge)
 
 twtxt is a [twtxt](https://twtxt.readthedocs.io/en/latest/) client in the form
-of a web application. !and command-line client. It supports multiple users and
+of a web application. ~and command-line client. It supports multiple users and
 also hosts user feeds directly. It also  has a builtin registry and search.~
 
 There is also a publically (_free_) service online available at:
