@@ -14,7 +14,7 @@ There is also a publically (_free_) service online available at:
 
 - https://twtxt.net/
 
-![Screenshot](./screenshot.png)
+![Screenshot 1](./screenshot1.png)
 ![Screenshot 2](./screenshot2.png)
 
 ## Installation
