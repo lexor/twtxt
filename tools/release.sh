@@ -3,7 +3,7 @@
 set -e
 
 # shellcheck source=./tools/functions.sh
-. ./functions.sh
+. "$(dirname "$0")/functions.sh"
 
 TAG="${TAG}"
 
