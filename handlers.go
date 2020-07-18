@@ -147,7 +147,11 @@ func (s *Server) TimelineHandler() httprouter.Handle {
 
 		sort.Sort(sort.Reverse(tweets))
 
-		ctx.Tweets = tweets
+		if len(tweets) > 50 {
+			ctx.Tweets = tweets[:50]
+		} else {
+			ctx.Tweets = tweets
+		}
 
 		s.render("timeline", w, ctx)
 	}
@@ -346,10 +350,10 @@ func (s *Server) ImportHandler() httprouter.Handle {
 		for scanner.Scan() {
 			line := scanner.Text()
 			matches := re.FindStringSubmatch(line)
-			if len(matches) >= 2 {
-				nick := matches[0]
-				url := NormalizeURL(matches[1])
-				if nick != "" || url != "" {
+			if len(matches) == 3 {
+				nick := strings.TrimSpace(matches[1])
+				url := NormalizeURL(strings.TrimSpace(matches[2]))
+				if nick != "" && url != "" {
 					user.Following[nick] = url
 					imported++
 				}
