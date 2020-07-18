@@ -72,15 +72,20 @@ func ExpandMentions(text string, user *User) string {
 }
 
 func AppendTweet(path, text string, user *User) error {
-	p := filepath.Join(path, feedsDir, user.Username)
+	p := filepath.Join(path, feedsDir)
+	if err := os.MkdirAll(p, 0755); err != nil {
+		log.WithError(err).Error("error creating feeds directory")
+		return err
+	}
 
+	fn := filepath.Join(p, user.Username)
 	text = strings.TrimSpace(text)
 	if text == "" {
 		return fmt.Errorf("cowardly refusing to tweet empty text, or only spaces")
 	}
 
 	text = fmt.Sprintf("%s\t%s\n", time.Now().Format(time.RFC3339), ExpandMentions(text, user))
-	f, err := os.OpenFile(p, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	f, err := os.OpenFile(fn, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
@@ -95,6 +100,11 @@ func AppendTweet(path, text string, user *User) error {
 
 func GetAllTweets(conf *Config) (Tweets, error) {
 	p := filepath.Join(conf.Data, feedsDir)
+	if err := os.MkdirAll(p, 0755); err != nil {
+		log.WithError(err).Error("error creating feeds directory")
+		return nil, err
+	}
+
 	files, err := ioutil.ReadDir(p)
 	if err != nil {
 		log.WithError(err).Error("error listing feeds")
