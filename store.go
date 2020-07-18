@@ -3,7 +3,6 @@ package twtxt
 import (
 	"errors"
 	"fmt"
-	"net/url"
 )
 
 var (
@@ -23,14 +22,14 @@ type Store interface {
 }
 
 func NewStore(store string) (Store, error) {
-	u, err := url.Parse(store)
+	u, err := ParseURI(store)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing store url: %s", err)
+		return nil, fmt.Errorf("error parsing store uri: %s", err)
 	}
 
-	switch u.Scheme {
+	switch u.Type {
 	case "bitcask":
-		return newBitcaskStore(u.Hostname())
+		return newBitcaskStore(u.Path)
 	default:
 		return nil, ErrInvalidStore
 	}
