@@ -9,15 +9,15 @@
         <input type="text" name="username" placeholder="Username" aria-label="Username" autocomplete="nickname" autofocus required>
         <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
         <button type="submit" class="contrast">Login</button>
-        <small>
-          Don't have an account? <a href="/register">Register</a>
+        <p>
+          Don't have an account?
           {{ if .RegisterDisabled }}
             <a href="#" data-tooltip="{{ with .RegisterDisabledMessage }}{{ .RegisterDisabledMessage }}{{ else }}Registrations are disabled on this instance. Please contact the operator.{{ end }}">/register</a>
           {{ else }}
             <a href="/register">/register</a>
           {{ end }}
           instead.
-        </small>
+        </p>
       </form>
     </div>
     <div></div>
